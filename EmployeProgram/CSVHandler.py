@@ -26,8 +26,15 @@ class csvHandling():
             print(row)
             self.__init__(self.name)
     def addEmployee(self, employee):
-        new_id = max(self.reader, key=lambda row: int(row[0]))
-        new_id_number = int(new_id[0])
+        try:
+            new_id = max(self.reader, key=lambda row: int(row[0]))
+            new_id_number = int(new_id[0])
+        except ValueError:
+            new_id_number = 0
+            employee.insert(0, new_id_number)
+            self.writer.writerow(employee)
+            self.__init__(self.name)
+            return
         new_id_number += 1
         new_id_number = str(new_id_number)
         employee.insert(0, new_id_number)
@@ -48,11 +55,15 @@ class csvHandling():
         self.__init__(self.name)
         return
     def getEmployee(self, id):
+        
         employee = [row for row in self.reader if row[0] == f"{id}"]
         self.file1.close()
         self.file2.close()
         self.__init__(self.name)
-        return employee[0]
+        try:
+            return employee[0]
+        except IndexError:
+            raise IndexError
     def updateEmployee(self, id, employee):
         with open('temp.csv', 'w', newline='') as out:
             temp_writer = csv.writer(out)

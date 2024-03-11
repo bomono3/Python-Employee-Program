@@ -1,3 +1,7 @@
+import InvalidInputException
+from datetime import datetime
+import re
+
 class GuiDisplay:
     
     def list_options(self, choices):
@@ -8,9 +12,42 @@ class GuiDisplay:
 class GuiInputHandling:
     
     def take_input(self, input_type):
-        choice = input()
         
-        return choice
+        valid_input = 'false'
+        format = "%d/%m/%Y"
+        
+        while valid_input == 'false':
+            choice = input()
+            try:
+                match input_type:
+                        case 'int':
+                            int(choice)
+                            valid_input = 'true'
+                        case 'string':
+                            valid_input = 'true'
+                        case 'date':
+                            valid_input = bool(datetime.strptime(choice, format))
+                            valid_input = 'true'
+                        case 'money':
+                            result = re.match("\$?(-?(\d+[,.])*\d+)", choice)
+                            if result == None:
+                                raise InvalidInputException
+                            re.match("\$?(-?(\d+[,.])*\d+)", choice).group(1)
+                            re.sub('[,$]', '', choice)  
+                            float(re.sub('[,$]', '', choice))
+                            valid_input = 'true'
+                        case 'int5':
+                            if 6 < int(choice) < 1:
+                                raise InvalidInputException
+                            valid_input = 'true'
+                        case _:
+                            print('No input type specified')
+                            return
+            except (InvalidInputException.InvalidInputException, ValueError):
+                valid_input = 'false'
+            if valid_input == 'false':
+                GuiDisplay.printALine(GuiDisplay, 'Invalid input, try again.')
+        return str(choice)
     def create_employee(self):
         employee = list()
         GuiDisplay.printALine(GuiDisplay, 'Input first name:')
