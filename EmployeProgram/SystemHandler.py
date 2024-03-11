@@ -11,25 +11,26 @@ class SystemHandling():
     
     def systemNavigation(self):
         self.csv_handler = CSVHandler.csvHandling(self.file_name)
-        self.gui_display.list_options(self.options)
-        choice = self.gui_input.take_input("int5")
         valid_input = 'false'
         while valid_input == 'false':
+            self.gui_display.list_options(self.options)
+            choice = self.gui_input.take_input("int5")
             match choice:
                 case '1':
+                    self.gui_display.printALine('id, first_name, last_name,date_of_employment, salery, department')
                     self.csv_handler.readFile(self.file_name)
-                    valid_input = 'true'
                 case '2':
                     employee = self.gui_input.create_employee()
-                    self.csv_handler.AddEmployee(employee)
-                    valid_input = 'true'
+                    self.csv_handler.addEmployee(employee)
                 case '3':
-                    print('case 3')
-                    valid_input = 'true'
+                    self.gui_display.printALine('Select employee id to update')
+                    id = self.gui_input.take_input('int')
+                    employee_update = self.csv_handler.getEmployee(id)
+                    new_employee = self.gui_input.update_employee(employee_update)
+                    self.csv_handler.updateEmployee(id, new_employee)
                 case '4':
                     id = self.gui_input.remove_employee()
                     self.csv_handler.removeEmployee(id)
-                    valid_input = 'true'
                 case '5':
                     valid_input = 'true'
                     return
