@@ -25,7 +25,11 @@ class SystemHandling():
                 case '3':
                     self.gui_display.printALine('Select employee id to update')
                     id = self.gui_input.take_input('int')
-                    employee_update = self.csv_handler.getEmployee(id)
+                    try:
+                        employee_update = self.csv_handler.getEmployee(id)
+                    except IndexError:
+                        self.gui_display.printALine('Employee with ID Does not exist.')
+                        continue
                     new_employee = self.gui_input.update_employee(employee_update)
                     self.csv_handler.updateEmployee(id, new_employee)
                 case '4':
